@@ -1,0 +1,411 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>厦门市轮渡公司互联网购票系统-导游中心</title>
+<link href="/resources/images/css.css" rel="stylesheet"
+    type="text/css" />
+<link href="/resources/images/contact.css" rel="stylesheet"
+    type="text/css" />
+<link href="/resources/css/pagination.css" rel="stylesheet"
+    type="text/css" />
+<link href="/resources/css/dialog.css" rel="stylesheet"
+    type="text/css" />
+<script type="text/javascript" src="/resources/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="/resources/js/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.pagination.js"></script>
+<script type="text/javascript" src="/resources/js/dialog.js"></script>
+    <script type="text/javascript">
+    	function showMessage(){
+    		alert("账户未激活，请联系客服人员！");
+    	}
+    </script>
+</head>
+<body>
+    ﻿<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(/resources/images/topbg.jpg);
+   ">
+    <tbody>
+        <tr>
+            <td>
+                <table width="100%" height="40" border="0" cellpadding="0" cellspacing="0" class="p12">
+                    <tbody>
+                        <tr>
+                            <td align="right" width="80px">
+                                <a class="orange" href="http://www.gly.cn" target="_blank">鼓浪屿门户</a>
+                            </td>
+                            <td align="right" width="80px">
+                                <a class="orange" href="http://www.xiamen-lundu.com/" target="_blank">轮渡公司</a>
+                            </td>
+                            <td width="150px">
+                                <div align="right">
+                                    <span class="style1">
+                                        <script language="javascript" type="text/javascript">
+                                            function Year_Month() {
+                                                var now = new Date();
+                                                var yy = (now.getYear() < 1900) ? (1900 + now.getYear()) : now.getYear();
+                                                var mm = now.getMonth() + 1;
+                                                var cl = '<font color="#000000">';
+                                                if (now.getDay() == 0) cl = '<font color="#000000">';
+                                                if (now.getDay() == 6) cl = '<font color="#000000">';
+                                                return (cl + yy + '年' + mm + '月</font>');
+                                            } function Date_of_Today() {
+                                                var now = new Date();
+                                                var cl = '<font color="#000000">';
+                                                if (now.getDay() == 0) cl = '<font color="#000000">';
+                                                if (now.getDay() == 6) cl = '<font color="#000000">';
+                                                return (cl + now.getDate() + '日</font>');
+                                            } function Day_of_Today() {
+                                                var day = new Array();
+                                                day[0] = "星期日";
+                                                day[1] = "星期一";
+                                                day[2] = "星期二";
+                                                day[3] = "星期三";
+                                                day[4] = "星期四";
+                                                day[5] = "星期五";
+                                                day[6] = "星期六";
+                                                var now = new Date();
+                                                var cl = '<font color="#000000">';
+                                                if (now.getDay() == 0) cl = '<font color="#000000">';
+                                                if (now.getDay() == 6) cl = '<font color="#000000">';
+                                                return (cl + day[now.getDay()] + '</font>');
+                                            } function CurentTime() {
+                                                var now = new Date();
+                                                var hh = now.getHours();
+                                                var mm = now.getMinutes();
+                                                var ss = now.getTime() % 60000;
+                                                ss = (ss - (ss % 1000)) / 1000;
+                                                var clock = hh + ':';
+                                                if (mm < 10) clock += '0';
+                                                clock += mm + ':';
+                                                if (ss < 10) clock += '0';
+                                                clock += ss;
+                                                return (clock);
+                                            } function refreshCalendarClock() {
+                                                document.all.calendarClock1.innerHTML = Year_Month();
+                                                document.all.calendarClock2.innerHTML = Date_of_Today();
+                                                document.all.calendarClock3.innerHTML = Day_of_Today();
+
+                                            }
+
+                                            document.write('<font id="calendarClock1" style="font-family:宋体;font-size:12px;line-height:120%"> </font>');
+                                            document.write('<font id="calendarClock2" style="font-family:宋体;font-size:12px;line-height:120%"> </font><font style="font-family:宋体;font-size:12px;line-height:120%" color="#000000"></font> ');
+                                            document.write('<font id="calendarClock3" style="font-family:宋体;font-size:12px;line-height:120%"> </font> ');
+
+                                            setInterval('refreshCalendarClock()', 1000);
+                                                            
+                                                            
+                                        </script>
+                                    </span>
+                                </div>
+                            </td>
+                            <td align="right" width="70%">
+                                <table>
+                                    <tr>
+                                                                                <td>
+                                            <a title="用户中心" href="/guide/guideIndex.do" class="orange">
+                                                苏玉玲 ,欢迎您！</a>
+                                        </td>
+                                        <td>
+                                            <div style="margin-bottom: 5px">
+                                                <img alt="" src="/resources/images/line.gif" height="18" /></div>
+                                        </td>
+                                        <td>
+                                            <a title="用户中心" href="/guide/guideIndex.do" class="black">
+                                                用户中心</a>
+                                        </td>
+                                        <td>
+                                            <div style="margin-bottom: 5px">
+                                                <img alt="" src="/resources/images/line.gif" height="18" /></div>
+                                        </td>
+                                        <td>
+                                            <a title="系统消息" href="/guide/guideMessage.do" class="black">
+                                                <span id="msgcount"></span>
+                                                <script language="javascript" type="text/javascript">
+                                                    getcount();
+                                                    function getcount() {
+                                                        $.ajax({
+                                                            url: '/guideSysmessageCount.do',
+                                                            type: 'POST',
+                                                            success: function (xml) {
+                                                                $("#msgcount").html(xml);
+
+                                                            },
+                                                            error: function () { }
+                                                        });
+                                                    }
+                                                    setInterval('getcount()', 60000); 
+                                                </script>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div style="margin-bottom: 5px">
+                                                <img alt="" src="/resources/images/line.gif" height="18" /></div>
+                                        </td>
+                                        <td>
+                                            <a href="/guide/guideLogout.do" class="black">退出</a>
+                                        </td>
+                                                                            </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#EBEBEB">
+    <tbody>
+        <tr>
+            <td>
+                <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="p12">
+                    <tbody>
+                        <tr>
+                            <td align="center">
+                                <img src="/resources/images/top.jpg" width="1000"
+                                    height="180" alt="" />
+                            </td>
+                        </tr>
+                        <tr style="height: 30px;">
+                            <td>
+                                <marquee behavior="scroll" scrollamount="2"><span id="prompt"></span></marquee>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div id="lxwm" style="border-right: 3px double #000000; border-top: 3px double #000000;
+    background: #ffffff; border-left: 3px double #000000; border-bottom: 3px double #000000;
+    position: absolute; width: 400; height: 300; top: 300px; left: 400px; background-color: #FFFFFF;
+    text-align: center; display: none;">
+    <br />
+    <br />
+    <div style="text-align: left; margin-left: 100">
+        <b>厦门市轮渡公司 </b>
+        <br />
+        <br />
+        地址： 厦门市大中路85号嘉年华1204<br />
+        邮编： 361001
+        <br />
+        传真： 0592-2054873
+        <br />
+        <br />
+        电子邮件：b2c@gly.cn
+        <br />
+        咨询电话：0592-2023518
+        <br />
+        (电话咨询服务时间上午7:30-11:30下午14:30-17:30)
+        <br />
+    </div>
+    <button onclick="show('none');">
+        关闭</button>
+</div>
+<script type="text/javascript">
+<!--
+    var msg = '0';
+    if (msg != '0') {
+        alert(msg);
+    }
+    //-->
+    function show(arg) {
+        var lxwm = document.getElementById('lxwm');
+        if (lxwm) {
+            lxwm.style.display = arg;
+        }
+    }
+    $.ajax({
+        url: '/prompt.do',
+        type: 'POST',
+        success: function (xml) {
+            $("#prompt").html(xml);
+        },
+        error: function () { }
+    });  
+</script>
+    <div id="content1" style="border-right: 3px outset #ffffff; border-top: 3px outset #ffffff;
+        background: #ffffff; border-left: 3px outset #ffffff; border-bottom: 3px outset #ffffff;
+        position: absolute; width: 600; heigth: 250; top: 400px; left: 400px; background-color: #0099FF;
+        display: none">
+        <div id="content" style="margin-top: 10; margin-left: 60;">
+        </div>
+    </div>
+    <table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF"
+        class="p12" >
+        <tbody>
+            <tr>
+                <td width="1000" valign="top">
+                    <div class="containerWrap_left">
+                    	<!-- 
+                        <div>
+                            <a href="/index.do" title="我要购票">
+                                <img src="/resources/images/usercert1.gif" /></a>
+                        </div>
+                         -->
+                        <div class="left_bao">
+                            <div class="left_down_z" id="left_down_z">
+                                <table width="100%" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td class="left_12306">
+                                            <img src="/resources/images/left_xiao.jpg" />
+                                          		  订单中心
+                                        </td>
+                                    </tr>
+                                                                        <tr>
+                                        <td class="text3">
+                                            <a href="guideQuery.do" class="black">船票预约</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="queryGuideReserve.do" class="black">我的预约</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="guideSelect.do" class="black">我的订单</a>
+                                        </td>
+                                    </tr>
+                                  <!-- 
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="payorder.do" class="black">已支付订单</a>
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="guideReturn.do" class="black">退票查询</a>
+                                        </td>
+                                    </tr>
+                                                                        <!-- 
+										<tr>
+											<td class="text3">
+												<a href="change.do">改签</a>
+											</td>
+										</tr> -->
+                                    <tr>
+                                        <td class="left_12306">
+                                            <img src="/resources/images/left_xiao.jpg" />
+                                            	我的信息
+                                        </td>
+                                    </tr>
+                              
+                              		<tr>
+                                        <td class="text3">
+                                            <a href="guideContact.do" class="black">导游信息</a>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="guideInfo.do" class="black">账户资料</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="guideMessage.do" class="black">系统消息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="changeGuidePwd.do" class="black">密码修改</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text3">
+                                            <a href="guideLogout.do" class="black">退出登录</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pim_right">
+	<div class="pim_title">
+		<div style="float: left;">
+			<img
+				src="/resources/images/reg_1.jpg" />
+		</div>
+		<div class="pim_titlefont">系统消息</div>
+		<div style="float: right;">
+			<img
+				src="/resources/images/reg_3.jpg" />
+		</div>
+	</div>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0"
+		class="pim_font">
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1"></td>
+		</tr>
+		<tr>
+			<td width="2%" class="font_r1"></td>
+			<td>
+				<h3>苏玉玲 ，欢迎您！</h3></td>
+		</tr>
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1">状态：已审核 <br />
+				</td>
+		</tr>
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1">系统取消预约数：9</td>
+		</tr>
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1">手动取消预约数：13</td>
+		</tr>
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1">总取消预约数：22</td>
+		</tr>
+		<tr>
+			<td class="font_r1"></td>
+			<td class="font_r1" style="color: red;">非实时信息，重新登陆后获取最新消息。</td>
+		</tr>
+	</table>
+</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="84%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(/resources/images/line_bg.jpg)">
+    <tr>
+        <td style="height: 8px;">
+        </td>
+    </tr>
+</table>
+<table style="width: 100%" height="100px" border="0" cellpadding="0" cellspacing="0" align="center">
+    <tbody>
+        <tr hight="40px">
+            <td   align="center" style="font-size:16px; font-family:SimHei;"> 
+                           <span style="margin:10px 10px 10px 0px"> <img src="/resources/images/4.gif" /><a href="/useed.do"
+                                target="_blank">使用须知</a></span>
+                            <span style="margin:10px 10px 10px 80px"> <img src="/resources/images/5.gif" /><a href="/help.do"
+                                target="_blank">使用帮助 </a></span>
+                            <span style="margin:10px 10px 10px 80px"> <img src="/resources/images/6.gif" /><a href="/related.do"
+                                target="_blank">相关规章 </a></span>
+                            <span style="margin:10px 10px 10px 80px"> <img src="/resources/images/7.gif" /><a href="#" onclick="show('inline');">联系我们</a></span>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+            <br />
+                <br />
+              <a href="http://www.xmferry.com/" target="_blank" style="text-decoration: none">
+                    厦门市轮渡公司</a>
+                <br>
+                邮件: b2c@gly.cn	　　闽ICP备05021348号  
+            
+           </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
