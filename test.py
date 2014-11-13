@@ -15,6 +15,7 @@ htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
 codeUrl = 'http://e.gly.cn/checkCode/generateCode.do'
 homeUrl = 'http://e.gly.cn/guide/guideIndex.do'
 loginUrl = 'http://e.gly.cn/j_spring_security_check'
+queryUrl = 'http://e.gly.cn/guide/guideQuery.do'
 username = 'xmjf001'
 password = '123456'
 
@@ -44,18 +45,29 @@ def readCode():
     f.write(response.read())
     f.close()
     return readCodeFromFile(imageFile)        
+
+
+#%% 登录
+loginData['guiderand'] = readCode()
+postData = urllib.urlencode(loginData)
+request = urllib2.Request(loginUrl, postData)
+response = urllib2.urlopen(request)
+content = response.read()
         
 #%% 读取首页信息
 request = urllib2.Request(homeUrl)      
 response=urllib2.urlopen(request)  
 content = response.read()
-        
+       
 
 #%%
-loginData['guiderand'] = readCode()
-postData = urllib.urlencode(loginData)
-req = urllib2.Request(loginUrl, postData)
-response = urllib2.urlopen(req)
+queryData={
+    'flightLineName':'邮轮中心厦鼓码头-三丘田码头',
+    'flightDate':'2014-11-14'
+}
+postData = urllib.urlencode(queryData)
+request = urllib2.Request(queryUrl, postData)
+response = urllib2.urlopen(request)
 content = response.read()
 
 #%%
