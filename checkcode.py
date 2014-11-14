@@ -129,8 +129,10 @@ def readImageArrayMap(datapath):
             result[fn[0]] = pickle.load(open(filename, "rb" ))
     return result      
 
+
+arrayMapPath = '\\'.join(__file__.split('\\')[:-1]) + '\\data'
 # 读取所有位图数据供readCharFromImage使用
-imageArrayMap = readImageArrayMap(r'd:\pydev\ticketpitcher\data')
+imageArrayMap = readImageArrayMap(arrayMapPath)
 
 
 def readCharFromImage(image):
@@ -177,8 +179,13 @@ def readCodeFromFile(filepath):
     读取一个文件中的验证码
     filepath 图片文件的路径
     '''
-    image = Image.open(r'd:\pydev\ticketpitcher\generateCode.jpg')
+    image = Image.open(r'generateCode.jpg')
     return readCodeFromImage(image)
+    
+
+def printFilePath():
+    print arrayMapPath
+   
     
 
 #%% 读取图像文件
