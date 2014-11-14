@@ -9,13 +9,13 @@ Created on Mon Oct 27 22:19:38 2014
 # 导入相关模块
 from __future__ import division
 import numpy as np
-import matplotlib.pyplot as plt
-import pytesseract
+#import matplotlib.pyplot as plt
+#import pytesseract
 import Image
 from sklearn.cluster import KMeans
 import pandas as pd
 from copy import copy
-from matplotlib.colors import ColorConverter
+#from matplotlib.colors import ColorConverter
 import string
 import os
 import sys
