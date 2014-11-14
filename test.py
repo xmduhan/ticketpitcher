@@ -8,6 +8,7 @@ Created on Fri Nov 14 21:54:18 2014
 #%%
 from ticketpitcher import pitcher
 
+
 #%% 登录
 pitcher.login()
 

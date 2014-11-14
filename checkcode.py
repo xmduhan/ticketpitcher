@@ -20,6 +20,7 @@ import string
 import os
 import sys
 import pickle
+from config import arrayMapPath
 
 # 设置当前目录
 #os.chdir(r"d:\pydev\ticketpitcher")
@@ -130,7 +131,7 @@ def readImageArrayMap(datapath):
     return result      
 
 
-arrayMapPath = '\\'.join(__file__.split('\\')[:-1]) + '\\data'
+#arrayMapPath = '\\'.join(__file__.split('\\')[:-1]) + '\\data'
 # 读取所有位图数据供readCharFromImage使用
 imageArrayMap = readImageArrayMap(arrayMapPath)
 
