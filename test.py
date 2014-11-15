@@ -10,7 +10,7 @@ from ticketpitcher import pitcher
 
 
 #%% 登录
-pitcher.login()
+pitcher.login('xmjf001','123456')
 
 #%%
 ticketInfo = pitcher.getTicketInfo('2014-11-29')

@@ -9,7 +9,7 @@ import cookielib, urllib2, urllib
 from PIL import Image
 #from ticketpitcher.checkcode import readCodeFromFile
 from checkcode import readCodeFromFile
-from config import username,password,tempPath
+from config import tempPath
 from BeautifulSoup import BeautifulSoup,NavigableString
 import string
 from pandas import DataFrame
@@ -23,13 +23,6 @@ loginUrl = 'http://e.gly.cn/j_spring_security_check'
 queryUrl = 'http://e.gly.cn/guide/guideQuery.do'
 
 
-loginData = {
-    'loginTarget':'targetGuide',
-    'username': username,
-    'j_username':'GUIDE_' + username,
-    'j_password':password,
-    'guiderand':'****'
-}
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar();
@@ -75,16 +68,47 @@ def getTicketInfo(day):
         records.append(record)    
     return records
 
-def login():
+
+def isLogin():
+    '''
+    检查当前是否已经登录系统
+    '''    
+    #  读取首页信息
+    request = urllib2.Request(homeUrl)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    soup = BeautifulSoup(content)
+    pim_font = soup.find(attrs={'class': 'pim_font'})
+    if pim_font == None:
+        return False
+    if pim_font.h3.string.split(u'，')[1] == u'欢迎您！':
+        return True
+    else:
+        return False
+
+    
+
+def login(username,password):
     '''
     登录
+    username 登录系统的用户名
+    password 用户密码
     '''
+    loginData = {
+        'loginTarget':'targetGuide',
+        'username': username,
+        'j_username':'GUIDE_' + username,
+        'j_password':password,
+        'guiderand':'****'
+    }
     loginData['guiderand'] = readCode()
     postData = urllib.urlencode(loginData)
     request = urllib2.Request(loginUrl, postData)
     response = urllib2.urlopen(request)
     content = response.read()
+    return isLogin()
         
+
 
 def printTicketInfo(ticketInfo):
     '''
@@ -95,3 +119,40 @@ def printTicketInfo(ticketInfo):
         for rd in record:
             print rd,
         print 
+
+
+'''
+http://e.gly.cn/guide/guideReserve.do?dailyFlightId=5576
+
+ticketName_1=团体票50
+ticketId_1=3B00ED413ED344179A441269CCA55FFC
+price_1=50.0
+count_1=1
+childCount_1=0
+totalAmt_1=50
+
+ticketName_2=儿童半价票25
+ticketId_2=BED62B5557BF4229854F0571C3E8B519
+price_2=25.0
+count_2=0
+childCount_2=0
+totalAmt_2=0
+
+ticketName_3=残军半价票25
+ticketId_3=232BEEFA2BEC40FFB3C2378D13BBFD8F
+price_3=25.0
+count_3=0
+childCount_3=0
+totalAmt_3=0
+
+ticketCounts=1
+childCounts=0
+ticketAmts=50
+randCode=8C4K
+
+dailyFlightId=5579
+ticketCount=3
+ticketMessage=3B00ED413ED344179A441269CCA55FFC%3B1%3B0%3D
+
+
+'''
