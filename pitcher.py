@@ -22,7 +22,7 @@ homeUrl = 'http://e.gly.cn/guide/guideIndex.do'
 loginUrl = 'http://e.gly.cn/j_spring_security_check'
 queryUrl = 'http://e.gly.cn/guide/guideQuery.do'
 reserveUrl = 'http://e.gly.cn/guide/guideReserve.do?dailyFlightId=%s'
-
+submitUrl = 'http://e.gly.cn/guide/submitGuideReserve.do'
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar();
@@ -176,13 +176,46 @@ def getTicketMessage(formData):
             ticketMessage += "="
     return ticketMessage
 
-
 def orderTicket(dailyFlightId,n):
     '''
     根据航班号标识预定船票
     dailyFlightId  航班的标识
     n  要预订票的数量(整型)
     返回True成功,False失败
+
+    提交链接地址    
+    http://e.gly.cn/guide/submitGuideReserve.do
+    提交表单的格式范例:        
+    ticketName_1=团体票50
+    ticketId_1=3B00ED413ED344179A441269CCA55FFC
+    price_1=50.0
+    count_1=1
+    childCount_1=0
+    totalAmt_1=50
+    -------------
+    ticketName_2=儿童半价票25
+    ticketId_2=BED62B5557BF4229854F0571C3E8B519
+    price_2=25.0
+    count_2=0
+    childCount_2=0
+    totalAmt_2=0
+    ------------
+    ticketName_3=残军半价票25
+    ticketId_3=232BEEFA2BEC40FFB3C2378D13BBFD8F
+    price_3=25.0
+    count_3=0
+    childCount_3=0
+    totalAmt_3=0
+    -------------
+    ticketCounts=1
+    childCounts=0
+    ticketAmts=50
+    randCode=8C4K
+    -------------
+    dailyFlightId=5579
+    ticketCount=3
+    ticketMessage=3B00ED413ED344179A441269CCA55FFC%3B1%3B0%3D
+    
     '''
     # 请求表单页面    
     url = reserveUrl % dailyFlightId
@@ -200,45 +233,22 @@ def orderTicket(dailyFlightId,n):
         formData[itemName] = readFormItemValue(form,itemName)
     
     # 设置表单的信息
-    formData['count_1'] = str(n)
-    formData['ticketCounts'] = str(n)
-    formData['ticketMessage'] = getTicketMessage(formData)
-    formData['randCode'] = readCode() 
-    return formData
-
-#%%
-'''
-http://e.gly.cn/guide/guideReserve.do?dailyFlightId=5579
-
-ticketName_1=团体票50
-ticketId_1=3B00ED413ED344179A441269CCA55FFC
-price_1=50.0
-count_1=1
-childCount_1=0
-totalAmt_1=50
-
-ticketName_2=儿童半价票25
-ticketId_2=BED62B5557BF4229854F0571C3E8B519
-price_2=25.0
-count_2=0
-childCount_2=0
-totalAmt_2=0
-
-ticketName_3=残军半价票25
-ticketId_3=232BEEFA2BEC40FFB3C2378D13BBFD8F
-price_3=25.0
-count_3=0
-childCount_3=0
-totalAmt_3=0
-
-ticketCounts=1
-childCounts=0
-ticketAmts=50
-randCode=8C4K
-
-dailyFlightId=5579
-ticketCount=3
-ticketMessage=3B00ED413ED344179A441269CCA55FFC%3B1%3B0%3D
-
-
-'''
+    formData['count_1'] = str(n)                                    # 票数    
+    formData['totalAmt_1'] = str(float(formData['price_1']) * n)    # 票价 
+    formData['ticketCounts'] = str(n)                               # 总票数
+    formData['ticketAmts'] = formData['totalAmt_1']                 # 总票价
+    formData['ticketMessage'] = getTicketMessage(formData)          # 校验信息
+    formData['randCode'] = readCode()                               # 验证码
+    
+    # 提交预定请求
+    postData = urllib.urlencode(formData)
+    request = urllib2.Request(submitUrl, postData)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    
+    # 判断预定的结果
+    soup = BeautifulSoup(content) 
+    if soup.strong.div.getText().split('&')[0] == u'预订成功!':
+        return True
+    else:
+        return False

@@ -37,8 +37,8 @@ dict(form.find(attrs={'name':'ticketName_1'}).attrs)[u'value']
 pitcher.login('xmjf001','123456')
 
 #%%
-formData = pitcher.orderTicket(5579,1)
+pitcher.orderTicket(5579,1)
 
-#%%
+
 
 
