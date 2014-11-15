@@ -164,13 +164,17 @@ def getTicketMessage(formData):
     }
     此过程实际将该代码翻译成python
     
-    '''
-    ticketCounts = formData['ticketCounts']
+    '''    
     ticketMessage = ''
-    
-    
-
-
+    ticketCounts = formData['ticketCounts']
+    for i in range(1,int(formData['ticketCounts'])+1):
+        if int(formData["count_" + str(i)]) > 0  :
+            ticketMessage += formData["ticketId_" + str(i)]
+            ticketMessage += ";"
+            ticketMessage += formData["count_" + str(i)]
+            ticketMessage += ";"
+            ticketMessage += formData["childCount_" + str(i)]
+            ticketMessage += "="
 
 
 def orderTicket(dailyFlightId,n):
