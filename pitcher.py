@@ -166,7 +166,6 @@ def getTicketMessage(formData):
     
     '''    
     ticketMessage = ''
-    ticketCounts = formData['ticketCounts']
     for i in range(1,int(formData['ticketCounts'])+1):
         if int(formData["count_" + str(i)]) > 0  :
             ticketMessage += formData["ticketId_" + str(i)]
@@ -175,13 +174,14 @@ def getTicketMessage(formData):
             ticketMessage += ";"
             ticketMessage += formData["childCount_" + str(i)]
             ticketMessage += "="
+    return ticketMessage
 
 
 def orderTicket(dailyFlightId,n):
     '''
     根据航班号标识预定船票
-    dailyFlightId
-    n
+    dailyFlightId  航班的标识
+    n  要预订票的数量(整型)
     返回True成功,False失败
     '''
     # 请求表单页面    
@@ -198,6 +198,12 @@ def orderTicket(dailyFlightId,n):
     formData = {}
     for itemName in formItemNameList:
         formData[itemName] = readFormItemValue(form,itemName)
+    
+    # 设置表单的信息
+    formData['count_1'] = str(n)
+    formData['ticketCounts'] = str(n)
+    formData['ticketMessage'] = getTicketMessage(formData)
+    formData['randCode'] = readCode() 
     return formData
 
 #%%
