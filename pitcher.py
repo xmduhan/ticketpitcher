@@ -5,17 +5,17 @@ Created on Thu Nov 13 20:03:21 2014
 @author: duhan
 """
 #%%
-import cookielib, urllib2, urllib;
+import cookielib, urllib2, urllib
 from PIL import Image
 #from ticketpitcher.checkcode import readCodeFromFile
 from checkcode import readCodeFromFile
-from config import username,password
+from config import username,password,tempPath
 from BeautifulSoup import BeautifulSoup,NavigableString
 import string
 from pandas import DataFrame
 
 #%% 初始化全局变量
-imageFile = r'generateCode.jpg'
+imageFile = tempPath + 'generateCode.jpg'
 #htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
 codeUrl = 'http://e.gly.cn/checkCode/generateCode.do'
 homeUrl = 'http://e.gly.cn/guide/guideIndex.do'

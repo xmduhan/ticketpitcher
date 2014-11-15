@@ -8,4 +8,6 @@ username = 'xmjf001'
 password = '123456'
 #arrayMapPath = r'/usr/lib/python2.7/dist-packages/ticketpitcher/data'
 arrayMapPath = r'D:\pydev\ticketpitcher\data'
+#tempPath = r'/tmp/'
+tempPath = r'd:\temp'
 

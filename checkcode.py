@@ -20,7 +20,7 @@ import string
 import os
 import sys
 import pickle
-from config import arrayMapPath
+from config import arrayMapPath,tempPath
 
 # 设置当前目录
 #os.chdir(r"d:\pydev\ticketpitcher")
@@ -180,7 +180,7 @@ def readCodeFromFile(filepath):
     读取一个文件中的验证码
     filepath 图片文件的路径
     '''
-    image = Image.open(r'generateCode.jpg')
+    image = Image.open(tempPath+'generateCode.jpg')
     return readCodeFromImage(image)
     
 
