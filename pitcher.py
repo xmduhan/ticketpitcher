@@ -21,7 +21,7 @@ codeUrl = 'http://e.gly.cn/checkCode/generateCode.do'
 homeUrl = 'http://e.gly.cn/guide/guideIndex.do'
 loginUrl = 'http://e.gly.cn/j_spring_security_check'
 queryUrl = 'http://e.gly.cn/guide/guideQuery.do'
-
+reserveUrl = 'http://e.gly.cn/guide/guideReserve.do?dailyFlightId=%s'
 
 
 #%% 增加cookie支持
@@ -65,6 +65,8 @@ def getTicketInfo(day):
         for td in tr.findAll('td'):
             if type(td.string) == NavigableString:
                 record.append(td.string.strip())
+            else:
+                record.append(dict(td.input.attrs)['onclick'].replace(')','').split(',')[-1])
         records.append(record)    
     return records
 
@@ -121,8 +123,82 @@ def printTicketInfo(ticketInfo):
         print 
 
 
+def readFormItemValue(form,name):
+    '''
+    从订票表单页面中读取数据
+    form 订票表单(BeautifulSoup)
+    name 要读取的信息项名称(input的name属性)
+    
+    '''
+    try:
+        result = dict(form.find(attrs={'name':name}).attrs)[u'value']
+    except:
+        result = None
+    return result
+
+
+# 表单信息项
+formItemNameList=[
+'ticketName_1','ticketId_1','price_1','count_1','childCount_1','totalAmt_1',
+'ticketName_2','ticketId_2','price_2','count_2','childCount_2','totalAmt_2',
+'ticketName_3','ticketId_3','price_3','count_3','childCount_3','totalAmt_3',
+'ticketCounts','childCounts','ticketAmts','randCode',
+'dailyFlightId','ticketCount','ticketMessage'
+]
+
+def getTicketMessage(formData):
+    '''
+    生成表单的ticketMessage项
+    formData 表单数据
+    猜测ticketMessage是一个表单的验证项，其生成的javascript代码为:
+    var ticketMessage = ""
+    for ( var i = 1; i <= ticketCounts; i++) {
+        if (parseInt($("#count_" + i).val()) > 0) {
+            ticketMessage += $("#ticketId_" + i).val();
+            ticketMessage += ";";
+            ticketMessage += $("#count_" + i).val();
+            ticketMessage += ";";
+            ticketMessage += $("#childCount_" + i).val();
+            ticketMessage += "=";
+        }
+    }
+    此过程实际将该代码翻译成python
+    
+    '''
+    ticketCounts = formData['ticketCounts']
+    ticketMessage = ''
+    
+    
+
+
+
+
+def orderTicket(dailyFlightId,n):
+    '''
+    根据航班号标识预定船票
+    dailyFlightId
+    n
+    返回True成功,False失败
+    '''
+    # 请求表单页面    
+    url = reserveUrl % dailyFlightId
+    request = urllib2.Request(url)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    # 读取表单对象
+    soup = BeautifulSoup(content) 
+    form = soup.find(attrs={'id':'confirmPassenger'})
+    if not form:
+        return False    
+    # 读取各表单项的值
+    formData = {}
+    for itemName in formItemNameList:
+        formData[itemName] = readFormItemValue(form,itemName)
+    return formData
+
+#%%
 '''
-http://e.gly.cn/guide/guideReserve.do?dailyFlightId=5576
+http://e.gly.cn/guide/guideReserve.do?dailyFlightId=5579
 
 ticketName_1=团体票50
 ticketId_1=3B00ED413ED344179A441269CCA55FFC
