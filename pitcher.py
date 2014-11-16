@@ -49,6 +49,7 @@ def getTicketInfo(day):
     按日期获取所有的船票信息
     day 输入的日期，格式为:yyyy-mm-dd
     '''
+    # 提交请求并获取返回结果    
     queryData={
         #'flightLineName':'邮轮中心厦鼓码头-三丘田码头',
         'flightDate':day
@@ -57,7 +58,8 @@ def getTicketInfo(day):
     request = urllib2.Request(queryUrl, postData)
     response = urllib2.urlopen(request)
     content = response.read()    
-    #header = ['序号','出发码头','抵达码头','航班号','开航时间','票价','余票']   
+    
+    # 解析返回结果到list形式
     soup = BeautifulSoup(content) 
     records = []
     for tr in soup.findAll(attrs={"class": "passenger_class"}):
@@ -68,7 +70,11 @@ def getTicketInfo(day):
             else:
                 record.append(dict(td.input.attrs)['onclick'].replace(')','').split(',')[-1])
         records.append(record)    
-    return records
+    
+    # 将返回结果转化为pandas的DataFrame
+    header = [u'序号',u'出发码头',u'抵达码头',u'航班号',u'开航时间',u'票价',u'余票',u'航班ID'] 
+    df = DataFrame(records,columns=header)
+    return df
 
 
 def isLogin():
@@ -112,15 +118,15 @@ def login(username,password):
         
 
 
-def printTicketInfo(ticketInfo):
-    '''
-    打印船票信息
-    ticketInfo 船票信息的list
-    '''
-    for record in ticketInfo:
-        for rd in record:
-            print rd,
-        print 
+#def printTicketInfo(ticketInfo):
+#    '''
+#    打印船票信息
+#    ticketInfo 船票信息的list
+#    '''
+#    for record in ticketInfo:
+#        for rd in record:
+#            print rd,
+#        print 
 
 
 def readFormItemValue(form,name):
