@@ -59,6 +59,11 @@ def getTicketInfo(day):
     response = urllib2.urlopen(request)
     content = response.read()    
     
+    localName = "d:/temp.html"
+    tmpfile=open(localName,'wb')
+    tmpfile.write(content)
+    tmpfile.close()
+    
     # 解析返回结果到list形式
     soup = BeautifulSoup(content) 
     records = []

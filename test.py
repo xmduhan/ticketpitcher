@@ -7,15 +7,12 @@ Created on Fri Nov 14 21:54:18 2014
 
 #%%
 from ticketpitcher import pitcher
-from BeautifulSoup import BeautifulSoup
-from pandas import DataFrame,Series
-import chardet
-
+#from BeautifulSoup import BeautifulSoup
 
 #%% --------------------------- 获取剩余票数 ---------------------------
 pitcher.login('xmjf001','123456')
 #%%
-ticketInfo = pitcher.getTicketInfo('2014-11-29')
+ticketInfo = pitcher.getTicketInfo('2014-12-09')
 ticketInfo
 
 #%%
