@@ -127,7 +127,7 @@ def readImageArrayMap(datapath):
     for fn in os.listdir(datapath):        
         filename = os.path.join(datapath,fn)
         if len(fn) == 4 and fn.endswith('.pk'):
-            result[fn[0]] = pickle.load(open(filename, "rb" ))
+            result[fn[0]] = pickle.load(open(filename, "rU" ))
     return result      
 
 
