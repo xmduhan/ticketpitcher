@@ -66,16 +66,20 @@ def getTicketInfo(day):
     
     # 解析返回结果到list形式
     soup = BeautifulSoup(content) 
-    records = []
-    for tr in soup.findAll(attrs={"class": "passenger_class"}):
-        record = []
-        for td in tr.findAll('td'):
-            if type(td.string) == NavigableString:
-                record.append(td.string.strip())
-            else:
-                record.append(dict(td.input.attrs)['onclick'].replace(')','').split(',')[-1])
-        records.append(record)    
-    
+    table = soup.findAll(attrs={"class": "passenger_class"})
+    #print 'table=',table    
+    if table :
+        records = []
+        for tr in table:
+            record = []
+            for td in tr.findAll('td'):
+                if type(td.string) == NavigableString:
+                    record.append(td.string.strip())
+                else:
+                    record.append(dict(td.input.attrs)['onclick'].replace(')','').split(',')[-1])
+            records.append(record)    
+    else:
+        records = None
     # 将返回结果转化为pandas的DataFrame
     header = [u'序号',u'出发码头',u'抵达码头',u'航班号',u'开航时间',u'票价',u'余票',u'航班ID'] 
     df = DataFrame(records,columns=header)

@@ -26,3 +26,9 @@ pitcher.login('xmjf001','123456')
 #%%
 pitcher.orderTicket(6762,1)
 
+
+#%%
+from pandas import DataFrame
+records = []
+header = [u'序号',u'出发码头',u'抵达码头',u'航班号',u'开航时间',u'票价',u'余票',u'航班ID'] 
+df = DataFrame(records,columns=header)
