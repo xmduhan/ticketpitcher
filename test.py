@@ -13,12 +13,17 @@ from ticketpitcher import pitcher
 #%% --------------------------- 获取剩余票数 ---------------------------
 pitcher.login('xmjf001','123456')
 #%%
-ticketInfo = pitcher.getTicketInfo('2014-12-09')
+ticketInfo = pitcher.getTicketInfo('2014-12-08')
 ticketInfo
 
 #%%
-ticketInfo[ticketInfo[u'余票'].apply(lambda x:int(x))>0]
-
+c1 = ticketInfo[u'出发码头'] == u'邮轮中心厦鼓码头'
+c2 = ticketInfo[u'抵达码头'] == u'三丘田码头'
+c3 = ticketInfo[u'余票'].apply(lambda x:int(x))>0
+#%%
+ticketInfo[ c1 & c2 & c3 ]
+#%%
+ticketInfo[ c1 & c2 ]
 #%% --------------------------- 订票 ---------------------------
 
 pitcher.login('xmjf001','123456')
@@ -27,8 +32,3 @@ pitcher.login('xmjf001','123456')
 pitcher.orderTicket(6762,1)
 
 
-#%%
-from pandas import DataFrame
-records = []
-header = [u'序号',u'出发码头',u'抵达码头',u'航班号',u'开航时间',u'票价',u'余票',u'航班ID'] 
-df = DataFrame(records,columns=header)
