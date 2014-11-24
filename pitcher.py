@@ -245,9 +245,15 @@ def orderTicket(dailyFlightId,n):
     formData['ticketAmts'] = formData['totalAmt_1']                 # 总票价
     formData['ticketMessage'] = getTicketMessage(formData)          # 校验信息
     formData['randCode'] = readCode()                               # 验证码
+
+    # 将表单格式转化为utf-8格式
+    strFormData = {}
+    for key, value in formData.iteritems():
+        strFormData[key] = unicode(value).encode('utf-8')
+    
     
     # 提交预定请求
-    postData = urllib.urlencode(formData)
+    postData = urllib.urlencode(strFormData)
     request = urllib2.Request(submitUrl, postData)
     response = urllib2.urlopen(request)
     content = response.read()
