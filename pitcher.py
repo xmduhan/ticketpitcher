@@ -179,9 +179,14 @@ def getTicketMessage(formData):
     }
     此过程实际将该代码翻译成python
     
-    '''    
+    '''
+    # 注意!!!!!!!
+    # ticketCounts变量名出现重名
+    # ticketCounts 这似乎不是总票数，是票项数 团队票35 儿童半价票18 残军半价票18  共3类票项
+    
     ticketMessage = ''
-    for i in range(1,int(formData['ticketCounts'])+1):
+    #for i in range(1,int(formData['ticketCounts'])+1):
+    for i in range(1,3+1):
         if int(formData["count_" + str(i)]) > 0  :
             ticketMessage += formData["ticketId_" + str(i)]
             ticketMessage += ";"

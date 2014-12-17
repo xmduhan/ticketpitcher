@@ -11,9 +11,9 @@ from ticketpitcher import pitcher
 
 
 #%% --------------------------- 获取剩余票数 ---------------------------
-pitcher.login('xmjf001','123456')
+pitcher.login('cndits','ym2592527')
 #%%
-ticketInfo = pitcher.getTicketInfo('2014-12-08')
+ticketInfo = pitcher.getTicketInfo('2014-12-25')
 ticketInfo
 
 #%%
@@ -26,9 +26,9 @@ ticketInfo[ c1 & c2 & c3 ]
 ticketInfo[ c1 & c2 ]
 #%% --------------------------- 订票 ---------------------------
 
-pitcher.login('xmjf001','123456')
+pitcher.login('cndits','ym2592527')
 
 #%%
-pitcher.orderTicket(6762,1)
+pitcher.orderTicket(9138,10)
 
 
