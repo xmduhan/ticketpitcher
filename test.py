@@ -13,7 +13,11 @@ from ticketpitcher import pitcher
 #%% --------------------------- 获取剩余票数 ---------------------------
 pitcher.login('cndits','ym2592527')
 #%%
+<<<<<<< HEAD
 ticketInfo = pitcher.getTicketInfo('2014-12-25')
+=======
+ticketInfo = pitcher.getTicketInfo('2014-12-14')
+>>>>>>> fdb38ffdfbf11158b6d521c197cabc6dc408b2a4
 ticketInfo
 
 #%%
@@ -30,5 +34,6 @@ pitcher.login('cndits','ym2592527')
 
 #%%
 pitcher.orderTicket(9138,10)
+
 
 
