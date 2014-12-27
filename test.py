@@ -11,10 +11,10 @@ from BeautifulSoup import BeautifulSoup
 
 
 #%% --------------------------- 获取剩余票数 ---------------------------
-pitcher.login('xmjf001','123456')
+pitcher.login('cndits','ym2592527')
 #%%
 ticketInfo = pitcher.getTicketInfo('2015-01-14')
-ticketInfo
+
 
 #%%
 c1 = ticketInfo[u'出发码头'] == u'邮轮中心厦鼓码头'
@@ -26,19 +26,16 @@ ticketInfo[ c1 & c2 & c3 ]
 ticketInfo[ c1 & c2 ]
 #%% --------------------------- 订票 ---------------------------
 
-pitcher.login('xmjf001','123456')
+pitcher.login('cndits','ym2592527')
 
 #%%
 pitcher.orderTicket(11051,1)
-
 
 
 #%%
 content = pitcher.getReserveInfo()
 content
 
-#%%
-bs = BeautifulSoup(content)
 
 
 
