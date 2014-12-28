@@ -14,7 +14,8 @@ from BeautifulSoup import BeautifulSoup, NavigableString
 import string
 from pandas import DataFrame
 import re
-
+from datetime import datetime
+from dateutil import parser
 
 #%% 初始化全局变量
 imageFile = tempPath + 'generateCode.jpg'
@@ -33,8 +34,8 @@ reserveUrl = 'http://e.gly.cn/guide/guideReserve.do?dailyFlightId=%s'
 submitUrl = 'http://e.gly.cn/guide/submitGuideReserve.do'
 # 获取已订的票的信息
 queryReserveUrl = 'http://e.gly.cn/guide/queryGuideReserve.do'
-
-
+# 取消预定
+cancelReserveUrl = 'http://e.gly.cn/guide/saveCancelGuideReserve.do?reverseId=%s'
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar()
@@ -128,7 +129,97 @@ def getReserveInfo():
     # 将返回结果转化为pandas的DataFrame
     header = [u'航线', u'航班时间', u'人数', u'携带儿童', u'金额', u'预约时间', u'最后确认时间', u'状态', u'预订ID']
     df = DataFrame(records, columns=header)
+    # 根据已订票的信息计算出航班的关键信息
+    df[u'开航日期'] = df[u'航班时间'].apply(lambda x: datetime.strftime(parser.parse(x), "%Y-%m-%d"))
+    df[u'开航时间'] = df[u'航班时间'].apply(lambda x: datetime.strftime(parser.parse(x), "%H:%M"))
+    df[u'出发码头'] = df[u'航线'].apply(lambda x: x.split('-')[0])
+    df[u'抵达码头'] = df[u'航线'].apply(lambda x: x.split('-')[1])
     return df
+
+
+def getDailyFlightId(beginDay, beginTime, departure, arrival):
+    '''
+    根据航班信息获取航班ID
+    beginDay  开航日期，格式:"%Y-%m-%d"
+    beginTime 开航时间，格式:"%H:%M"
+    departure 出发码头
+    arrival 抵达码头
+    成功返回航班的id，失败返回None
+    '''
+    ticketInfo = getTicketInfo(beginDay)
+    c1 = ticketInfo[u'出发码头'] == departure
+    c2 = ticketInfo[u'抵达码头'] == arrival
+    c3 = ticketInfo[u'开航时间'] == beginTime
+    data = ticketInfo[c1 & c2 & c3]
+    if len(data) == 1:
+        return int(data[u'航班ID'].irow(0))
+    else:
+        return None
+
+
+def cancelReserve(reverseId):
+    '''
+    提交的原始http协议格式
+    reverseId   要取消的预订记录的ID
+    POST /guide/saveCancelGuideReserve.do?reverseId=40931 HTTP/1.1
+    randCode=ti0y&dailyFlightId=%24%7BdailyFlight.id%7D
+    randCode=ti0y&dailyFlightId=${dailyFlight.id}
+    '''
+    url = cancelReserveUrl % (str(reverseId))
+
+    # 提交请求并获取返回结果
+    data = {
+        'randCode': readCode(),  # 验证码,
+        'dailyFlightId': '${dailyFlight.id}'
+    }
+    postData = urllib.urlencode(data)
+    request = urllib2.Request(url, postData)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    # 检查取消是否成功
+    soup = BeautifulSoup(content)
+    try:
+        if soup.strong.getText().split('&')[0] == u'取消预约成功！':
+            return True
+        else:
+            return False
+    except:
+        return False
+
+
+def refreshReserve(reverseId, reserveInfo=None):
+    '''
+    通过取消预订，再重新预订的方法刷新预订的最后确认时间
+    reverseId   要刷新的预订记录的ID
+    reserveInfo 当前用户的预订信息（通过调用getReserveInfo获得），如果为空将重新请求
+    '''
+    if reserveInfo == None:
+        reserveInfo = getReserveInfo()
+
+    # 读取当前预订数据
+    c1 = reserveInfo[u'预订ID'] == str(reverseId)
+    data = reserveInfo[c1]
+    if len(data) != 1:
+        return False
+
+    # 通过预订数据获取航班ID    
+    beginDay = data.irow(0)[u'开航日期']
+    beginTime = data.irow(0)[u'开航时间']
+    departure = data.irow(0)[u'出发码头']
+    arrival = data.irow(0)[u'抵达码头']
+    dailyFlightId = getDailyFlightId(beginDay, beginTime, departure, arrival)
+
+
+    # 取消预订    
+    if cancelReserve(reverseId) == False:
+        return False
+
+    # 重新预订
+    cnt = int(data.irow(0)[u'人数'])
+    if orderTicket(dailyFlightId, cnt) == False:
+        return False
+
+    return True
 
 
 def isLogin():
@@ -166,7 +257,8 @@ def login(username, password):
     postData = urllib.urlencode(loginData)
     request = urllib2.Request(loginUrl, postData)
     response = urllib2.urlopen(request)
-    content = response.read()
+    #content = response.read()
+    response.read()
     return isLogin()
 
 
@@ -229,8 +321,8 @@ def getTicketMessage(formData):
     # ticketCounts 这似乎不是总票数，是票项数 团队票35 儿童半价票18 残军半价票18  共3类票项
     ticketMessage = ''
     #for i in range(1,int(formData['ticketCounts'])+1):
-    for i in range(1,3+1):
-        if int(formData["count_" + str(i)]) > 0  :
+    for i in range(1, 3 + 1):
+        if int(formData["count_" + str(i)]) > 0:
             ticketMessage += formData["ticketId_" + str(i)]
             ticketMessage += ";"
             ticketMessage += formData["count_" + str(i)]
