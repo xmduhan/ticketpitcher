@@ -16,9 +16,10 @@ from pandas import DataFrame
 import re
 from datetime import datetime
 from dateutil import parser
+import uuid
 
 #%% 初始化全局变量
-imageFile = tempPath + 'generateCode.jpg'
+imageFile = tempPath + str(uuid.uuid1()) + '.jpg'
 #htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
 # 读取验证码
 codeUrl = 'http://e.gly.cn/checkCode/generateCode.do'
