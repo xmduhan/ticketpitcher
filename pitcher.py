@@ -38,6 +38,8 @@ queryReserveUrl = 'http://e.gly.cn/guide/queryGuideReserve.do'
 # 取消预定
 cancelReserveUrl = 'http://e.gly.cn/guide/saveCancelGuideReserve.do?reverseId=%s'
 
+orderUrl = 'http://e.gly.cn/guide/guideSelect.do'
+
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar()
 ckproc = urllib2.HTTPCookieProcessor(ckjar)
@@ -137,6 +139,74 @@ def getReserveInfo():
     df[u'抵达码头'] = df[u'航线'].apply(lambda x: x.split('-')[1])
     return df
 
+
+def getOrderInfo(beginDay,endDay):
+    '''
+    获得当前用户名下的订单信息
+    beginDay  起始日期(yyyy-mm-dd)
+    endDay    结束日期(yyyy-mm-dd)
+    返回所有订单信息pandas DataFrame格式    
+    '''
+    
+    def _sendRequest(page):
+        '''
+        指定页数返回对应的网页内容
+        '''
+        queryData = {
+            'dateType': '1',
+            'bDate': beginDay,
+            'eDate':	endDay,
+            'state':	'0',
+            'name' : '',
+            'orderId' : '',
+            'idNumber' : '',
+            'page' : unicode(page),    
+            'dateType1' : '1',
+            'state1' : '0',
+            'bDate1' : beginDay,
+            'eDate1' : endDay,
+            'orderId1' : '',
+            'idNumber1' : '',
+            'name1' : '' 
+        }
+        postData = urllib.urlencode(queryData)
+        request = urllib2.Request(orderUrl, postData)
+        response = urllib2.urlopen(request)
+        content = response.read()
+        return content
+    
+    # 定义订单信息项解析逻辑
+    sw = {
+        0:lambda x : x.string.split(':')[1],
+        1:lambda x : x.string.split(':')[1].strip().split('.')[0],
+        2:lambda x : ':'.join(x.string.split(':')[1:]).strip(),
+        3:lambda x : x.string.split(':')[1].strip(),
+        4:lambda x : x.string.split(':')[1].strip(),
+        5:lambda x : x.string.split(':')[1].strip(),
+        6:lambda x : x.string.split(':')[1].strip(),
+        7:lambda x : x.string.split(':')[1].strip(),
+        8:lambda x :':'.join(x.string.split(':')[1:]).strip().replace('  ',' ')
+    }
+    
+    records = []
+    page = 1
+    orderList = True   # 使程序能够进入循环
+    while orderList:
+        content = _sendRequest(page)      
+        soup = BeautifulSoup(content)
+        orderList = soup.findAll(attrs={"class": "jdan_tfont"})
+        for order in orderList:
+            orderInfo = order.findAll('li')
+            getInfo=lambda x : sw[x](orderInfo[x])
+            record = [getInfo(i) for i in range(len(orderInfo))] 
+            records.append(record)            
+        page += 1            
+    
+    # 数据转化为DataFrame格式    
+    header = [u'订单号', u'金额', u'订单时间', u'人数', u'携带儿童', u'发票', u'航线', u'航班号',u'启航时间']
+    df = DataFrame(records if records else None, columns=header)
+    return df
+    
 
 def getDailyFlightId(beginDay, beginTime, departure, arrival):
     '''
