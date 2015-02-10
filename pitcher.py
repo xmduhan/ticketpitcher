@@ -21,24 +21,29 @@ import uuid
 #%% 初始化全局变量
 imageFile = tempPath + str(uuid.uuid1()) + '.jpg'
 #htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
-# 读取验证码
-codeUrl = 'http://e.gly.cn/checkCode/generateCode.do'
-# 首页
-homeUrl = 'http://e.gly.cn/guide/guideIndex.do'
-# 登录
-loginUrl = 'http://e.gly.cn/j_spring_security_check'
-# 查询余票
-queryUrl = 'http://e.gly.cn/guide/guideQuery.do'
-# 订票界面
-reserveUrl = 'http://e.gly.cn/guide/guideReserve.do?dailyFlightId=%s'
-# 订票提交
-submitUrl = 'http://e.gly.cn/guide/submitGuideReserve.do'
-# 获取已订的票的信息
-queryReserveUrl = 'http://e.gly.cn/guide/queryGuideReserve.do'
-# 取消预定
-cancelReserveUrl = 'http://e.gly.cn/guide/saveCancelGuideReserve.do?reverseId=%s'
 
-orderUrl = 'http://e.gly.cn/guide/guideSelect.do'
+# 初始化域名
+#domain = 'http://e.gly.cn'
+domain = 'http://e.xmferry.com'
+
+# 读取验证码
+codeUrl = domain + '/checkCode/generateCode.do'
+# 首页
+homeUrl = domain + '/guide/guideIndex.do'
+# 登录
+loginUrl = domain + '/j_spring_security_check'
+# 查询余票
+queryUrl = domain + '/guide/guideQuery.do'
+# 订票界面
+reserveUrl = domain + '/guide/guideReserve.do?dailyFlightId=%s'
+# 订票提交
+submitUrl = domain + '/guide/submitGuideReserve.do'
+# 获取已订的票的信息
+queryReserveUrl = domain + '/guide/queryGuideReserve.do'
+# 取消预定
+cancelReserveUrl = domain + '/guide/saveCancelGuideReserve.do?reverseId=%s'
+# 订单信息
+orderUrl = domain + '/guide/guideSelect.do'
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar()
