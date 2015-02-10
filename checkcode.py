@@ -21,6 +21,8 @@ import os
 import sys
 import pickle
 from config import arrayMapPath, tempPath
+from os import listdir
+from os.path import isfile, join, split
 
 # 设置当前目录
 #os.chdir(r"d:\pydev\ticketpitcher")
@@ -128,12 +130,21 @@ def readImageArrayMap(datapath):
     datapath  为数据文件存放的目录
     '''
     #result = {}
+
+    #for fn in os.listdir(datapath):
+    #    filename = os.path.join(datapath, fn)
+    #    if len(fn) == 4 and fn.endswith('.pk'):
+    #        #result[fn[0]] = pickle.load(open(filename, "rU" ))
+    #        result.append([fn[0], pickle.load(open(filename, "rU"))])
+
+    # 遍历目录下的所有文件导入内存
     result = []
-    for fn in os.listdir(datapath):
-        filename = os.path.join(datapath, fn)
-        if len(fn) == 4 and fn.endswith('.pk'):
-            #result[fn[0]] = pickle.load(open(filename, "rU" ))
-            result.append([fn[0], pickle.load(open(filename, "rU"))])
+    for path in [x[0] for x in os.walk(datapath)]:
+        fileList = [join(path, f) for f in listdir(path) if isfile(join(path, f)) and f[-3:] == '.pk' and len(f) == 4]
+        for filename in fileList:
+            fn = split(filename)[-1]
+            if len(fn) == 4 and fn.endswith('.pk'):
+                result.append([fn[0], pickle.load(open(filename, "rU"))])
     return result
 
 
