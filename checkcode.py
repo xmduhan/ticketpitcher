@@ -200,7 +200,11 @@ def readCodeFromFile(filepath):
     '''
     #image = Image.open(tempPath+'generateCode.jpg')
     image = Image.open(filepath)
-    return readCodeFromImage(image)
+    try:
+        result = readCodeFromImage(image)
+    except:
+        result = ''
+    return result
 
 
 def printFilePath():
