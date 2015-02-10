@@ -23,7 +23,7 @@ imageFile = tempPath + str(uuid.uuid1()) + '.jpg'
 #htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
 
 # 初始化域名
-#domain = 'http://e.gly.cn'
+#domain = 'http://e.gly.cn' 
 domain = 'http://e.xmferry.com'
 
 # 读取验证码
