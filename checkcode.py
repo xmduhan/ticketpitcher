@@ -20,7 +20,7 @@ import string
 import os
 import sys
 import pickle
-from config import arrayMapPath,tempPath
+from config import arrayMapPath, tempPath
 
 # 设置当前目录
 #os.chdir(r"d:\pydev\ticketpitcher")
@@ -33,43 +33,45 @@ def imageToDataFrame(image):
     '''
     将一个Image的像素数据转化为对应的数据集形式
     iamge 需要转化的Image对象
-    '''    
+    '''
     #print image.size[0],image.size[1]
     pixels = image.load()
-    data = []    
+    data = []
     for x in range(image.size[0]):
         for y in range(image.size[1]):
-            rec = (x,y) + copy(pixels[x,y]) 
+            rec = (x, y) + copy(pixels[x, y])
             data.append(rec)
     df = pd.DataFrame(data)
-    df.columns=('x','y','r','g','b')
+    df.columns = ('x', 'y', 'r', 'g', 'b')
     return df
 
-def cleanBackGround(image,bgColor=(255,255,255)):
+
+def cleanBackGround(image, bgColor=(255, 255, 255)):
     '''
     将图片背景涂成统一的颜色
     image   要处理的Image对象
     bgColor 背景要涂成的颜色
-    '''    
+    '''
     # 读取像素数据转化为数据集格式
     pixels = image.load()
     df = imageToDataFrame(image)
-    
+
     # 将所有像素数据分成2类(前景/背景)
-    estimator = KMeans(init='k-means++',n_clusters=2)
-    estimator.fit(df[['r','g','b']])
-    df['label'] = estimator.predict(df[['r','g','b']])
-    
+    estimator = KMeans(init='k-means++', n_clusters=2)
+    estimator.fit(df[['r', 'g', 'b']])
+    df['label'] = estimator.predict(df[['r', 'g', 'b']])
+
     # 通过标签区分出前景和背景
     labelCount = df.groupby('label').x.count().order(ascending=False).reset_index()
     bgLabel = labelCount.label[0]
-    df['bg'] = df.label.apply(lambda x:True if x == bgLabel else False)
-    
+    df['bg'] = df.label.apply(lambda x: True if x == bgLabel else False)
+
     # 先把背景涂成指定颜色
     bg = df[df.bg]
     for i in range(len(bg)):
         row = bg.irow(i)
-        pixels[int(row.x),int(row.y)] = bgColor
+        pixels[int(row.x), int(row.y)] = bgColor
+
 
 def splitImage(image):
     '''
@@ -79,29 +81,30 @@ def splitImage(image):
     pixels = image.load()
     result = []
     for i in range(4):
-        smallImage = Image.new( 'RGB', (20,20), "black")
+        smallImage = Image.new('RGB', (20, 20), "black")
         smallPixels = smallImage.load()
         for x in range(20):
             for y in range(20):
-               smallPixels[x,y] = pixels[i*20 + x,y]
+                smallPixels[x, y] = pixels[i * 20 + x, y]
         result.append(smallImage)
     return result
 
-def imageToArray(image,bgColor=(255,255,255)):
+
+def imageToArray(image, bgColor=(255, 255, 255)):
     '''
     将一个image转化为黑白（1,0)的二维数组
     '''
     pixels = image.load()
     xRange = image.size[0]
-    yRange = image.size[1]    
-    result = np.array(range(xRange*yRange))
-    result.resize(xRange,yRange)
+    yRange = image.size[1]
+    result = np.array(range(xRange * yRange))
+    result.resize(xRange, yRange)
     for x in range(xRange):
         for y in range(yRange):
-            if pixels[x,y] == bgColor:             
-                result[x,y] = 0
-            else: 
-                result[x,y] = 1
+            if pixels[x, y] == bgColor:
+                result[x, y] = 0
+            else:
+                result[x, y] = 1
     return result
 
 
@@ -110,25 +113,28 @@ def printArrayAsImage(array):
     给定一个位图数组将其打印出来
     array 要打印的数组
     '''
-    
+
     xRange = array.shape[0]
     yRange = array.shape[1]
     for y in range(yRange):
         for x in range(xRange):
-            print array[x,y],
-        print  
-        
+            print array[x, y],
+        print
+
+
 def readImageArrayMap(datapath):
     '''
     读取一个目录下的所有位图文件数据
     datapath  为数据文件存放的目录
     '''
-    result = {}
-    for fn in os.listdir(datapath):        
-        filename = os.path.join(datapath,fn)
+    #result = {}
+    result = []
+    for fn in os.listdir(datapath):
+        filename = os.path.join(datapath, fn)
         if len(fn) == 4 and fn.endswith('.pk'):
-            result[fn[0]] = pickle.load(open(filename, "rU" ))
-    return result      
+            #result[fn[0]] = pickle.load(open(filename, "rU" ))
+            result.append([fn[0], pickle.load(open(filename, "rU"))])
+    return result
 
 
 #arrayMapPath = '\\'.join(__file__.split('\\')[:-1]) + '\\data'
@@ -143,21 +149,22 @@ def readCharFromImage(image):
     image 需要读取的Image对象    
     '''
     curImageArray = imageToArray(image)
-    matchdata=[]
-    for char,array in imageArrayMap.items():
+    matchdata = []
+    for char, array in imageArrayMap:
         cnt = 0
         match = 0
         for x in range(array.shape[0]):
             for y in range(array.shape[1]):
-                if array[x,y] == 1:
-                   cnt += 1                 
-                   if curImageArray[x,y] == 1:
-                       match += 1    
-        matchdata.append([char,match/cnt,cnt])
-    df = pd.DataFrame(matchdata,columns=['char','rate','cnt'])
+                if array[x, y] == 1:
+                    cnt += 1
+                    if curImageArray[x, y] == 1:
+                        match += 1
+        matchdata.append([char, match / cnt, cnt])
+    df = pd.DataFrame(matchdata, columns=['char', 'rate', 'cnt'])
     # 由于背景处理可能会造成前景色的部分损耗，所以匹配率不一定是100%
     # 所以设定规则:匹配率在95%以上，取匹配点数最多的数据。
-    return df[df.rate>.95].sort('cnt',ascending=False).irow(0).char
+    return df[df.rate > .95].sort('cnt', ascending=False).irow(0).char
+
 
 def readCodeFromImage(image):
     '''
@@ -183,12 +190,11 @@ def readCodeFromFile(filepath):
     #image = Image.open(tempPath+'generateCode.jpg')
     image = Image.open(filepath)
     return readCodeFromImage(image)
-    
+
 
 def printFilePath():
     print arrayMapPath
-   
-    
+
 
 #%% 读取图像文件
 #image = Image.open(r'd:\pydev\ticketpitcher\generateCode.jpg')
