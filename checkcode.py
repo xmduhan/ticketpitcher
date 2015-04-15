@@ -11,7 +11,7 @@ from __future__ import division
 import numpy as np
 #import matplotlib.pyplot as plt
 #import pytesseract
-import Image
+from PIL import Image
 from sklearn.cluster import KMeans
 import pandas as pd
 from copy import copy
