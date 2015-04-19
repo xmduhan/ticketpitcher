@@ -200,15 +200,24 @@ def getOrderInfo(beginDay,endDay):
         content = _sendRequest(page)      
         soup = BeautifulSoup(content)
         orderList = soup.findAll(attrs={"class": "jdan_tfont"})
-        for order in orderList:
+        orderDetailList = soup.findAll(attrs={"class": "table_clist"})
+        # 将本页的数据转化为记录
+        for i,order in enumerate(orderList):
+            # 读取订单基本信息
             orderInfo = order.findAll('li')
             getInfo=lambda x : sw[x](orderInfo[x])
-            record = [getInfo(i) for i in range(len(orderInfo))] 
-            records.append(record)            
+            record = [getInfo(coln) for coln in range(len(orderInfo))]
+            # 读取订单的状态和导游信息
+            orderDetail = orderDetailList[i]
+            orderDetailInfo = orderDetail.findAll('td')
+            record.append(orderDetailInfo[0].string.split('&')[0].strip())
+            record.append(orderDetailInfo[2].string.strip())           
+            # 完成1条新记录的添加
+            records.append(record)        
         page += 1            
     
     # 数据转化为DataFrame格式    
-    header = [u'订单号', u'金额', u'订单时间', u'人数', u'携带儿童', u'发票', u'航线', u'航班号',u'启航时间']
+    header = [u'订单号', u'金额', u'订单时间', u'人数', u'携带儿童', u'发票', u'航线', u'航班号',u'启航时间',u'导游',u'订单状态']
     df = DataFrame(records if records else None, columns=header)
     return df
     
