@@ -496,9 +496,11 @@ def orderTicket(dailyFlightId, n):
     # 判断预定的结果
     soup = BeautifulSoup(content)
     try:
-        if soup.strong.div.getText().split('&')[0] == u'预订成功!':
+        #if soup.strong.div.getText().split('&')[0] == u'预订成功!':
+        if 'reserveId' in str(soup.form):
             return True
         else:
             return False
     except:
         return False
+    
