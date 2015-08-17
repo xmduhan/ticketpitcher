@@ -23,7 +23,7 @@ imageFile = tempPath + str(uuid.uuid1()) + '.jpg'
 #htmlFile = r'd:\pydev\ticketpitcher\tmp.html'
 
 # 初始化域名
-#domain = 'http://e.gly.cn' 
+#domain = 'http://e.gly.cn'
 domain = 'http://e.xmferry.com'
 
 # 读取验证码
@@ -66,11 +66,11 @@ def readCode():
 
 
 def getTicketInfo(day):
-    '''    
+    '''
     按日期获取所有的船票信息
     day 输入的日期，格式为:yyyy-mm-dd
     '''
-    # 提交请求并获取返回结果    
+    # 提交请求并获取返回结果
     queryData = {
         #'flightLineName':'邮轮中心厦鼓码头-三丘田码头',
         'flightDate': day
@@ -88,7 +88,7 @@ def getTicketInfo(day):
     # 解析返回结果到list形式
     soup = BeautifulSoup(content)
     table = soup.findAll(attrs={"class": "passenger_class"})
-    #print 'table=',table    
+    #print 'table=',table
     if table:
         records = []
         for tr in table:
@@ -150,9 +150,9 @@ def getOrderInfo(beginDay,endDay):
     获得当前用户名下的订单信息
     beginDay  起始日期(yyyy-mm-dd)
     endDay    结束日期(yyyy-mm-dd)
-    返回所有订单信息pandas DataFrame格式    
+    返回所有订单信息pandas DataFrame格式
     '''
-    
+
     def _sendRequest(page):
         '''
         指定页数返回对应的网页内容
@@ -165,21 +165,21 @@ def getOrderInfo(beginDay,endDay):
             'name' : '',
             'orderId' : '',
             'idNumber' : '',
-            'page' : unicode(page),    
+            'page' : unicode(page),
             'dateType1' : '1',
             'state1' : '0',
             'bDate1' : beginDay,
             'eDate1' : endDay,
             'orderId1' : '',
             'idNumber1' : '',
-            'name1' : '' 
+            'name1' : ''
         }
         postData = urllib.urlencode(queryData)
         request = urllib2.Request(orderUrl, postData)
         response = urllib2.urlopen(request)
         content = response.read()
         return content
-    
+
     # 定义订单信息项解析逻辑
     sw = {
         0:lambda x : x.string.split(':')[1],
@@ -192,12 +192,12 @@ def getOrderInfo(beginDay,endDay):
         7:lambda x : x.string.split(':')[1].strip(),
         8:lambda x :':'.join(x.string.split(':')[1:]).strip().replace('  ',' ')
     }
-    
+
     records = []
     page = 1
     orderList = True   # 使程序能够进入循环
     while orderList:
-        content = _sendRequest(page)      
+        content = _sendRequest(page)
         soup = BeautifulSoup(content)
         orderList = soup.findAll(attrs={"class": "jdan_tfont"})
         orderDetailList = soup.findAll(attrs={"class": "table_clist"})
@@ -206,21 +206,22 @@ def getOrderInfo(beginDay,endDay):
             # 读取订单基本信息
             orderInfo = order.findAll('li')
             getInfo=lambda x : sw[x](orderInfo[x])
-            record = [getInfo(coln) for coln in range(len(orderInfo))]
+            #record = [getInfo(coln) for coln in range(len(orderInfo))]
+            record = [getInfo(coln) for coln in range(len(sw))]
             # 读取订单的状态和导游信息
             orderDetail = orderDetailList[i]
             orderDetailInfo = orderDetail.findAll('td')
             record.append(orderDetailInfo[0].string.split('&')[0].strip())
-            record.append(orderDetailInfo[2].string.strip())           
+            record.append(orderDetailInfo[2].string.strip())
             # 完成1条新记录的添加
-            records.append(record)        
-        page += 1            
-    
-    # 数据转化为DataFrame格式    
+            records.append(record)
+        page += 1
+
+    # 数据转化为DataFrame格式
     header = [u'订单号', u'金额', u'订单时间', u'人数', u'携带儿童', u'发票', u'航线', u'航班号',u'启航时间',u'导游',u'订单状态']
     df = DataFrame(records if records else None, columns=header)
     return df
-    
+
 
 def getDailyFlightId(beginDay, beginTime, departure, arrival):
     '''
@@ -287,7 +288,7 @@ def refreshReserve(reverseId, reserveInfo=None):
     if len(data) != 1:
         return False
 
-    # 通过预订数据获取航班ID    
+    # 通过预订数据获取航班ID
     beginDay = data.irow(0)[u'开航日期']
     beginTime = data.irow(0)[u'开航时间']
     departure = data.irow(0)[u'出发码头']
@@ -295,7 +296,7 @@ def refreshReserve(reverseId, reserveInfo=None):
     dailyFlightId = getDailyFlightId(beginDay, beginTime, departure, arrival)
 
 
-    # 取消预订    
+    # 取消预订
     if cancelReserve(reverseId) == False:
         return False
 
@@ -355,7 +356,7 @@ def login(username, password):
 #    for record in ticketInfo:
 #        for rd in record:
 #            print rd,
-#        print 
+#        print
 
 
 def readFormItemValue(form, name):
@@ -363,7 +364,7 @@ def readFormItemValue(form, name):
     从订票表单页面中读取数据
     form 订票表单(BeautifulSoup)
     name 要读取的信息项名称(input的name属性)
-    
+
     '''
     try:
         result = dict(form.find(attrs={'name': name}).attrs)[u'value']
@@ -399,7 +400,7 @@ def getTicketMessage(formData):
         }
     }
     此过程实际将该代码翻译成python
-    
+
     '''
     # 注意!!!!!!!
     # ticketCounts变量名出现重名
@@ -424,9 +425,9 @@ def orderTicket(dailyFlightId, n):
     n  要预订票的数量(整型)
     返回True成功,False失败
 
-    提交链接地址    
+    提交链接地址
     http://e.gly.cn/guide/submitGuideReserve.do
-    提交表单的格式范例:        
+    提交表单的格式范例:
     ticketName_1=团体票50
     ticketId_1=3B00ED413ED344179A441269CCA55FFC
     price_1=50.0
@@ -456,9 +457,9 @@ def orderTicket(dailyFlightId, n):
     dailyFlightId=5579
     ticketCount=3
     ticketMessage=3B00ED413ED344179A441269CCA55FFC%3B1%3B0%3D
-    
+
     '''
-    # 请求表单页面    
+    # 请求表单页面
     url = reserveUrl % dailyFlightId
     request = urllib2.Request(url)
     response = urllib2.urlopen(request)
@@ -503,4 +504,4 @@ def orderTicket(dailyFlightId, n):
             return False
     except:
         return False
-    
+
