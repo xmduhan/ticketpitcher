@@ -378,7 +378,7 @@ formItemNameList = [
     'ticketName_1', 'ticketId_1', 'price_1', 'count_1', 'childCount_1', 'totalAmt_1',
     'ticketName_2', 'ticketId_2', 'price_2', 'count_2', 'childCount_2', 'totalAmt_2',
     'ticketName_3', 'ticketId_3', 'price_3', 'count_3', 'childCount_3', 'totalAmt_3',
-    'ticketCounts', 'childCounts', 'ticketAmts', 'randCode',
+    'ticketCounts', 'childCounts', 'ticketAmts', 'randCode','token',
     'dailyFlightId', 'ticketCount', 'ticketMessage'
 ]
 
@@ -454,6 +454,7 @@ def orderTicket(dailyFlightId, n):
     ticketAmts=50
     randCode=8C4K
     -------------
+    token=CC9028BE733A403E9F59F69B1B7408DB  # 2015-09-17增加
     dailyFlightId=5579
     ticketCount=3
     ticketMessage=3B00ED413ED344179A441269CCA55FFC%3B1%3B0%3D
