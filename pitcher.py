@@ -135,7 +135,7 @@ def getReserveInfo():
     else:
         records = None
     # 将返回结果转化为pandas的DataFrame
-    header = [u'航线', u'航班时间', u'人数', u'携带儿童', u'金额', u'预约时间', u'最后确认时间', u'状态', u'预订ID']
+    header = [u'航线', u'航班时间', u'人数', u'携带儿童', u'金额', u'定金金额', u'预约时间', u'最后确认时间', u'状态', u'预订ID']
     df = DataFrame(records, columns=header)
     # 根据已订票的信息计算出航班的关键信息
     df[u'开航日期'] = df[u'航班时间'].apply(lambda x: datetime.strftime(parser.parse(x), "%Y-%m-%d"))
