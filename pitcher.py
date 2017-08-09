@@ -11,12 +11,14 @@ from PIL import Image
 from checkcode import readCodeFromFile
 from config import tempPath
 from BeautifulSoup import BeautifulSoup, NavigableString
-import string
 from pandas import DataFrame
 import re
 from datetime import datetime
 from dateutil import parser
 import uuid
+
+import warnings
+warnings.simplefilter('ignore', FutureWarning)
 
 #%% 初始化全局变量
 imageFile = tempPath + str(uuid.uuid1()) + '.jpg'
