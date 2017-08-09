@@ -62,7 +62,10 @@ def readCode():
     f = open(imageFile, 'wb')
     f.write(response.read())
     f.close()
-    return readCodeFromFile(imageFile)
+    # print imageFile
+    result = readCodeFromFile(imageFile)
+    # print 'code:', result
+    return result
 
 
 def getTicketInfo(day):

@@ -103,7 +103,8 @@ def imageToArray(image, bgColor=(255, 255, 255)):
     result.resize(xRange, yRange)
     for x in range(xRange):
         for y in range(yRange):
-            if pixels[x, y] == bgColor:
+            # if pixels[x, y] == bgColor:
+            if sum(pixels[x, y]) > 600:
                 result[x, y] = 0
             else:
                 result[x, y] = 1
@@ -157,7 +158,7 @@ def readCharFromImage(image):
     '''
     从图像文件中读取一个字符，这里假设图像文件中仅有一个字符，既在调用tesseract的时
     候使用,使用-psm选项
-    image 需要读取的Image对象    
+    image 需要读取的Image对象
     '''
     curImageArray = imageToArray(image)
     matchdata = []
@@ -180,7 +181,7 @@ def readCharFromImage(image):
 def readCodeFromImage(image):
     '''
     图像文件读取验证码全文(4个字符)
-    image 需要读取的Image对象 
+    image 需要读取的Image对象
     '''
     # 处理背景
     cleanBackGround(image)
