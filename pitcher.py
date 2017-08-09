@@ -44,6 +44,8 @@ queryReserveUrl = domain + '/guide/queryGuideReserve.do'
 cancelReserveUrl = domain + '/guide/saveCancelGuideReserve.do?reverseId=%s'
 # 订单信息
 orderUrl = domain + '/guide/guideSelect.do'
+# 验证码检查url
+checkCodeUrl = domain + '/guide/checkCode.do?randCheckCode=%s'
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar()
@@ -66,6 +68,19 @@ def readCode():
     result = readCodeFromFile(imageFile)
     # print 'code:', result
     return result
+
+
+def isRightCode(code):
+    """
+    检查验证码是否正确
+    """
+    request = urllib2.Request(checkCodeUrl % code)
+    response = urllib2.urlopen(request)
+    result = response.read()
+    if result == '1':
+        return True
+    else:
+        return False
 
 
 def getTicketInfo(day):
