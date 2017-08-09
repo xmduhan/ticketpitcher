@@ -79,6 +79,7 @@ def isRightCode(code):
     request = urllib2.Request(checkCodeUrl % code)
     response = urllib2.urlopen(request)
     result = response.read()
+    print result
     if result == '1':
         return True
     else:
@@ -500,13 +501,21 @@ def orderTicket(dailyFlightId, n):
     for itemName in formItemNameList:
         formData[itemName] = readFormItemValue(form, itemName)
 
+    # 确定验证码正确再提交, 减少失败风险
+    for _ in range(5):
+        code = readCode()   # 验证码
+        if isRightCode(code):
+            break
+    else:
+        return False
+
     # 设置表单的信息
     formData['count_1'] = str(n)  # 票数
     formData['totalAmt_1'] = str(float(formData['price_1']) * n)  # 票价
     formData['ticketCounts'] = str(n)  # 总票数
     formData['ticketAmts'] = formData['totalAmt_1']  # 总票价
     formData['ticketMessage'] = getTicketMessage(formData)  # 校验信息
-    formData['randCode'] = readCode()  # 验证码
+    formData['randCode'] = code
 
     # 将表单格式转化为utf-8格式
     strFormData = {}
