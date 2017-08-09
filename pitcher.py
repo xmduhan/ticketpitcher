@@ -341,9 +341,12 @@ def login(username, password):
         'username': username,
         'j_username': 'GUIDE_' + username,
         'j_password': password,
-        'guiderand': '****'
+        # 'guiderand': '****'
+        'rand': '****'
     }
-    loginData['guiderand'] = readCode()
+    code = readCode()
+    # print 'code:', code
+    loginData['rand'] = code
     postData = urllib.urlencode(loginData)
     request = urllib2.Request(loginUrl, postData)
     response = urllib2.urlopen(request)
