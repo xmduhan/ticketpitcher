@@ -261,7 +261,7 @@ def getDailyFlightId(beginDay, beginTime, departure, arrival):
     data = ticketInfo[c1 & c2 & c3]
     if len(data) == 1:
         # return int(data[u'航班ID'].irow(0))
-        return data[u'航班ID'].irow(0)
+        return data[u'航班ID'].irow(0)[1:-1]
     else:
         return None
 
