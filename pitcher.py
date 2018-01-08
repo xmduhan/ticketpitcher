@@ -66,9 +66,9 @@ def readCode():
     f = open(imageFile, 'wb')
     f.write(response.read())
     f.close()
-    # print imageFile
+    print imageFile
     result = readCodeFromFile(imageFile)
-    # print 'code:', result
+    print 'code:', result
     return result
 
 
