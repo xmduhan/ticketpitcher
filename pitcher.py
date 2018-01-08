@@ -261,7 +261,8 @@ def getDailyFlightId(beginDay, beginTime, departure, arrival):
     data = ticketInfo[c1 & c2 & c3]
     if len(data) == 1:
         # return int(data[u'航班ID'].irow(0))
-        return data[u'航班ID'].irow(0)[1:-1]
+        # return data[u'航班ID'].irow(0)[1:-1]
+        return data[u'航班ID'].iloc[0][1:-1]
     else:
         return None
 
@@ -312,10 +313,14 @@ def refreshReserve(reverseId, reserveInfo=None):
         return False
 
     # 通过预订数据获取航班ID
-    beginDay = data.irow(0)[u'开航日期']
-    beginTime = data.irow(0)[u'开航时间']
-    departure = data.irow(0)[u'出发码头']
-    arrival = data.irow(0)[u'抵达码头']
+    # beginDay = data.irow(0)[u'开航日期']
+    # beginTime = data.irow(0)[u'开航时间']
+    # departure = data.irow(0)[u'出发码头']
+    # arrival = data.irow(0)[u'抵达码头']
+    beginDay = data.iloc[0][u'开航日期']
+    beginTime = data.iloc[0][u'开航时间']
+    departure = data.iloc[0][u'出发码头']
+    arrival = data.iloc[0][u'抵达码头']
     dailyFlightId = getDailyFlightId(beginDay, beginTime, departure, arrival)
 
 
@@ -324,7 +329,8 @@ def refreshReserve(reverseId, reserveInfo=None):
         return False
 
     # 重新预订
-    cnt = int(data.irow(0)[u'人数'])
+    # cnt = int(data.irow(0)[u'人数'])
+    cnt = int(data.iloc[0][u'人数'])
     if orderTicket(dailyFlightId, cnt) == False:
         return False
 
