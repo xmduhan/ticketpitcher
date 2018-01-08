@@ -64,14 +64,16 @@ def cleanBackGround(image, bgColor=(255, 255, 255)):
     df['label'] = estimator.predict(df[['r', 'g', 'b']])
 
     # 通过标签区分出前景和背景
-    labelCount = df.groupby('label').x.count().order(ascending=False).reset_index()
+    # labelCount = df.groupby('label').x.count().order(ascending=False).reset_index()
+    labelCount = df.groupby('label').x.count().sort_values(ascending=False).reset_index()
     bgLabel = labelCount.label[0]
     df['bg'] = df.label.apply(lambda x: True if x == bgLabel else False)
 
     # 先把背景涂成指定颜色
     bg = df[df.bg]
     for i in range(len(bg)):
-        row = bg.irow(i)
+        # row = bg.irow(i)
+        row = bg.iloc[i]
         pixels[int(row.x), int(row.y)] = bgColor
 
 
@@ -177,7 +179,7 @@ def readCharFromImage(image):
     # 所以设定规则:匹配率在95%以上，取匹配点数最多的数据。
     # return df[df.rate > .95].sort('cnt', ascending=False).irow(0).char
     # return df[df.rate > .9].sort_values('cnt', ascending=False).irow(0).char
-    return df.sort_values(['rate', 'cnt'], ascending=False).irow(0).char
+    return df.sort_values(['rate', 'cnt'], ascending=False).iloc[0].char
 
 
 def readCodeFromImage(image):
@@ -205,7 +207,8 @@ def readCodeFromFile(filepath):
     image = Image.open(filepath)
     try:
         result = readCodeFromImage(image)
-    except:
+    except Exception:
+        # raise
         result = ''
     return result
 
