@@ -4,6 +4,7 @@ Created on Thu Nov 13 20:03:21 2014
 
 @author: duhan
 """
+import json
 #%%
 import cookielib, urllib2, urllib
 from PIL import Image
@@ -48,6 +49,12 @@ cancelReserveUrl = domain + '/guide/saveCancelGuideReserve.do?reverseId=%s'
 orderUrl = domain + '/guide/guideSelect.do'
 # 验证码检查url
 checkCodeUrl = domain + '/guide/checkCode.do?randCheckCode=%s'
+# 查询付费订单信息
+payDepositUrl =  domain + '/guide/payDeposit.do?reserveId=%s'
+# 微信付费链接码
+weixinCodeUrl = domain + '/payment/ulinepayWeixin.do'
+# 微信付费二维码
+weixinPayUrl = domain + '/payment/qrcode.do?code=%s'
 
 #%% 增加cookie支持
 ckjar = cookielib.CookieJar()
@@ -547,3 +554,34 @@ def orderTicket(dailyFlightId, n):
     except:
         return False
 
+
+def getOrderNumber(reserveId):
+    """
+    获得订单编码
+    """
+    url = payDepositUrl % reserveId
+    request = urllib2.Request(url)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    soup = BeautifulSoup(content)
+    orderNumber = soup.find(id='orderNumber').text.split(u'：')[1].strip()
+    return orderNumber
+
+def getWeixinPayQrcode(orderNumber):
+    """
+    获取微信的付费二维码
+    sno 订单编号, 通过getOrderNumber获得
+    """
+    # 获取微信链接码
+    data = {'sno' : orderNumber}
+    postData = urllib.urlencode(data)
+    request = urllib2.Request(weixinCodeUrl, postData)
+    response = urllib2.urlopen(request)
+    content = response.read()
+    code = json.loads(content)['content']
+
+    # 获取付费二维码
+    url = weixinPayUrl % code
+    request = urllib2.Request(url)
+    response = urllib2.urlopen(request)
+    return response.read()
